@@ -1,4 +1,4 @@
-FROM debian:10.4-slim AS builder
+FROM debian:buster-slim AS builder
 
 RUN echo deb http://deb.debian.org/debian/ buster main >/etc/apt/sources.list &&\
  echo deb-src http://deb.debian.org/debian/ buster main >>/etc/apt/sources.list &&\
@@ -8,7 +8,9 @@ RUN echo deb http://deb.debian.org/debian/ buster main >/etc/apt/sources.list &&
  echo deb-src http://deb.debian.org/debian/ buster-updates main >>/etc/apt/sources.list
 
 RUN apt-get -y update &&\
-    apt-get -y install make wget git gcc g++ libgmp-dev libmpfr-dev libmpc-dev flex bison gettext texinfo ncurses-dev autoconf rsync
+    apt-get -y install make wget git gcc g++ libgmp-dev libmpfr-dev libmpc-dev flex bison gettext texinfo ncurses-dev autoconf rsync &&\
+    apt-get -y install ca-certificates &&\
+    update-ca-certificates
 
 RUN git clone https://github.com/bebbo/amiga-gcc &&\
     cd amiga-gcc &&\
@@ -17,7 +19,7 @@ RUN git clone https://github.com/bebbo/amiga-gcc &&\
 
 
 
-FROM debian:10.4-slim
+FROM debian:buster-slim
 
 COPY --from=builder /opt/amiga /opt/amiga
 
